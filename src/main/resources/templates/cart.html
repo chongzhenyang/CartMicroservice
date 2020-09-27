@@ -1,0 +1,174 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>购物车</title>
+    <link rel="stylesheet" type="text/css" href="css/public.css">
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+        }
+
+        .threeboder {
+            border: 1px solid #5B96D0;
+        }
+
+        .trow {
+            border-right: 1px solid #5B96D0;
+            border-bottom: 1px solid #5A96D6;
+        }
+
+        .theader {
+            background-color: #A5D3FF;
+            font-size: 14px;
+            border-right: 1px solid #5B96D0;
+            border-bottom: 1px solid #5A96D6;
+        }
+
+        div.header {
+            text-align: center;
+            font-size: 1.5em;
+            padding-top: 1.0em;
+            padding-bottom: 1.0em;
+            background-color: #E8E8E8;
+            border: solid 1px;
+        }
+
+        a:link {
+            font-size: 14px;
+            color: #333333;
+            text-decoration: none;
+        }
+
+        a:visited {
+            color: #333333;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #0066CC;
+        }
+
+        div.footer {
+            text-align: center;
+        }
+
+
+        .text3 {
+            color: #335182;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+
+
+        ul.pagination {
+            display: inline-block;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul.pagination li {display: inline;}
+
+        ul.pagination li a {
+            color: black;
+            float: left;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+            border: 1px solid #ddd;
+        }
+
+        ul.pagination li a.active {
+            background-color: #6861B9;
+            color: white;
+            border: 1px solid #6861B9;
+        }
+
+        ul.pagination li a:hover:not(.active) {background-color: #ddd;}
+
+        div.center {text-align: center;}
+    </style>
+
+    <script>
+        function calc(rowid, quantityInput) {
+
+            quantity = quantityInput.value
+            if (isNaN(quantity)) {
+                alert("Invalid Input！");
+                quantityInput.value = 0;
+                quantity = quantityInput.value
+                quantityInput.focus();
+
+            }
+
+            var price_id = 'price_' + rowid;
+
+            var price = parseFloat(document.getElementById(price_id).innerText);
+
+
+            var subtotal_id = 'subtotal_' + rowid;
+
+            subtotal1 = parseFloat(document.getElementById(subtotal_id).innerText);
+
+            subtotal1 = subtotal1.toFixed(2);
+            document.getElementById(subtotal_id).innerText = quantity * price;
+
+            subtotal2 = parseFloat(document.getElementById(subtotal_id).innerText);
+
+            total = parseFloat(document.getElementById('total').innerText);
+
+            total = total - subtotal1 + subtotal2;
+
+            total = total.toFixed(2);
+
+            document.getElementById('total').innerText = total;
+
+        }
+    </script>
+
+</head>
+
+<body>
+<table width="100%" border="0" align="center">
+    <tr>
+        <td width="616"><img src="/images/mycar1.jpg"  /></td>
+        <td width="734" align="right"><img src="/images/mycar1.jpg" align="absmiddle" /> <a href="Cart.html">&nbsp;cart</a>
+            | <a href="zhanghu.html">Account</a> | <a href="Catalog.html">Products</a></td>
+    </tr>
+</table>
+<hr width="100%"/>
+<div class="text3" align="center">Cart</div>
+<br>
+<table width="100%" border="0" align="center" class="threeboder">
+    <tr bgcolor="#A5D3FF">
+        <td height="50" align="center" class="theader">Product Name</td>
+        <td width="8%" align="center" class="theader">Quantity</td>
+        <td width="13%" align="center" class="theader">Price</td>
+        <td width="13%" align="center" class="theader">Sub Total</td>
+        <td width="4%" align="center" class="theader">Action</td>
+    </tr>
+    <tr th:each="product : ${cart.getProducts()}">
+        <td height="50" align="left" class="trow" th:text="${product.getProductName()}">&nbsp;&nbsp;</td>
+        <td align="center" class="trow">
+            <input name="quantity_1" type="text" value="1" th:onblur="'calc(\'' + ${product.getProductId()} + '\', this);'"/>
+        </td>
+        <td align="center" class="trow">&#36;<span id="price_1" th:text="${product.getPrice()}"></span></td>
+        <td align="center" class="trow">&#36;<span id="subtotal_1">699.99</span>
+        </td>
+        <td align="center" class="trow"><a th:href="@{/deleteProduct/{productId}(productId = ${product.getProductId()})}">&times;</a></td>
+    </tr>
+    <tr>
+        <td height="50" colspan="5" align="right">Total：&#36;<span id="total">1398</span>&nbsp;&nbsp;</td>
+    </tr>
+</table>
+<br>
+<div align="center">
+    <a th:href="@{/success/{cartId}(cartId = ${cart.getCartId()})}"><img src="images/submit_order.jpg" border="0"/></a>&nbsp;&nbsp;
+</div>
+<div class="footer">
+    <hr width="100%"/>
+    Copyright © Chongzhen 1996-2020. All Rights Reserved
+</div>
+</body>
+</html>
